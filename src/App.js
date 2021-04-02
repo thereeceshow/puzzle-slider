@@ -13,7 +13,7 @@ export class App extends React.Component {
       turns: 0,
       gameOn: false,
       winner: false,
-      usePic: 1
+      usePic: 'Reece'
     }
   }
 
@@ -89,13 +89,9 @@ export class App extends React.Component {
 
   handleSelect(e) {
     console.log(e.target.value)
-    if (e.target.value !== 0) {
-      this.setState({
-        usePic: e.target.value
-      })
-    }
-    
-
+    this.setState({
+      usePic: e.target.value
+    })
   }
 
   render() {
@@ -131,8 +127,8 @@ export class App extends React.Component {
             {!this.state.gameOn ?
             <select className="form-select mt-3" aria-label="Default select example" onChange={e => this.handleSelect(e)}>
               <option selected defaultValue="0">Select Puzzle Image</option>
-              <option value="1">Reece</option>
-              <option value="2">Funk Raptor</option>
+              <option value="Reece">Reece</option>
+              <option value="Funk">Funk Raptor</option>
             </select>
             : null}
           </div>

@@ -90,6 +90,7 @@ export class App extends React.Component {
     const mapHelper = (value, index) => {
       return (
         <Tile
+          value={value}
           key={index}
           index={value.index}
           currentPos={value.currentPos}
@@ -99,16 +100,22 @@ export class App extends React.Component {
       );
     };
 
-    const renderArray1 = this.state.boardArray.map(mapHelper)
+    const renderArray = this.state.boardArray.map(mapHelper)
 
     return (
-      <div className="App container" >
-        <h1 className="text-center mt-3 px-2">The Amazing Puzzle Slider Game</h1>
-        {this.state.winner ? <h1 className="text-center mt-3 px-2 text-success">WE HAVE A WINNER</h1> : null}
-        <div className="row p-4 text-center d-flex justify-content-center">
-          {renderArray1}
+      <div className="App container text-center">
+        <div className="row">
+          <h1>The Amazing Puzzle Slider Game</h1>
+          {this.state.winner ? <h1 className="text-success">WE HAVE A WINNER</h1> : null}
         </div>
-        <div className="d-flex justify-content-center"><button className="btn btn-secondary btn-large text-center" onClick={() => this.randShuffle()}>{this.state.gameOn ? 'Shuffle' : 'New Game'}</button></div>
+        <div className="row mx-auto pt-3 row400">
+          {renderArray}
+        </div>
+        <div className="row">
+          <div className="col">
+            <button className="btn btn-secondary btn-large text-center mt-3" onClick={() => this.randShuffle()}>{this.state.gameOn ? 'Shuffle' : 'New Game'}</button>
+          </div>
+        </div>
       </div>
     )
   }

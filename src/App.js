@@ -7,11 +7,13 @@ export class App extends React.Component {
     super(props);
     this.tileClick = this.tileClick.bind(this)
     this.randShuffle = this.randShuffle.bind(this)
+    this.handleSelect = this.handleSelect.bind(this)
     this.state = {
       boardArray: [],
       turns: 0,
       gameOn: false,
       winner: false,
+      usePic: 1
     }
   }
 
@@ -28,8 +30,8 @@ export class App extends React.Component {
     this.setState({ boardArray: newBoardArray })
   }
 
-  tileClick(clickedTile, index) {
-    if (this.state.gameOn && !this.state.winner) {
+  tileClick(clickedTile, index, overRide) {
+    if ((this.state.gameOn && !this.state.winner) || overRide === 'yes') {
       let newArray = [...this.state.boardArray];
       const blankTileFinder = (el) => el.isBlankTile === true;
       let blankPosIndex = newArray.findIndex(blankTileFinder)
@@ -57,17 +59,17 @@ export class App extends React.Component {
   }
 
   randShuffle() {
-    this.state.gameOn = true;
     let newArray = [...this.state.boardArray];
     let arrOfRandClicks = [-4, -1, 1, 4]
     for (let i = 0; i < 701; i++) {
       const blankTileFinder = (el) => el.isBlankTile === true;
       let blankPosIndex = newArray.findIndex(blankTileFinder);
       let randClick = blankPosIndex + arrOfRandClicks[Math.floor(Math.random() * 4)]
-      newArray[randClick] ? this.tileClick(newArray[randClick].currentPos, randClick) : i--
+      newArray[randClick] ? this.tileClick(newArray[randClick].currentPos, randClick, 'yes') : i--
     }
-    this.setState({ 
+    this.setState({
       gameOn: true,
+      winner: false,
       turns: 0,
     })
   }
@@ -85,6 +87,17 @@ export class App extends React.Component {
     }
   }
 
+  handleSelect(e) {
+    console.log(e.target.value)
+    if (e.target.value !== 0) {
+      this.setState({
+        usePic: e.target.value
+      })
+    }
+    
+
+  }
+
   render() {
 
     const mapHelper = (value, index) => {
@@ -96,6 +109,7 @@ export class App extends React.Component {
           currentPos={value.currentPos}
           click={this.tileClick}
           emptySquare={value.isBlankTile}
+          usePic={this.state.usePic}
         />
       );
     };
@@ -114,6 +128,13 @@ export class App extends React.Component {
         <div className="row">
           <div className="col">
             <button className="btn btn-secondary btn-large text-center mt-3" onClick={() => this.randShuffle()}>{this.state.gameOn ? 'Shuffle' : 'New Game'}</button>
+            {!this.state.gameOn ?
+            <select className="form-select mt-3" aria-label="Default select example" onChange={e => this.handleSelect(e)}>
+              <option selected defaultValue="0">Select Puzzle Image</option>
+              <option value="1">Reece</option>
+              <option value="2">Funk Raptor</option>
+            </select>
+            : null}
           </div>
         </div>
       </div>

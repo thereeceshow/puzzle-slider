@@ -26,7 +26,7 @@ export class App extends React.Component {
         currentPos: i,
         isBlankTile: false
       })
-    } newBoardArray[0].isBlankTile = true
+    }
     this.setState({ boardArray: newBoardArray })
   }
 
@@ -35,7 +35,6 @@ export class App extends React.Component {
       let newArray = [...this.state.boardArray];
       const blankTileFinder = (el) => el.isBlankTile === true;
       let blankPosIndex = newArray.findIndex(blankTileFinder)
-      console.log(blankPosIndex)
       let tempPos = newArray[blankPosIndex].currentPos
       let blankRow = Math.floor(blankPosIndex / 4);
       let blankCol = blankPosIndex % 4;
@@ -60,25 +59,34 @@ export class App extends React.Component {
 
   randShuffle() {
     let newArray = [...this.state.boardArray];
-    let arrOfRandClicks = [-4, -1, 1, 4]
-    for (let i = 0; i < 701; i++) {
-      const blankTileFinder = (el) => el.isBlankTile === true;
-      let blankPosIndex = newArray.findIndex(blankTileFinder);
-      let randClick = blankPosIndex + arrOfRandClicks[Math.floor(Math.random() * 4)]
-      newArray[randClick] ? this.tileClick(newArray[randClick].currentPos, randClick, 'yes') : i--
+    if (!this.state.gameOn) {
+      newArray[0].isBlankTile = true;
     }
-    this.setState({
-      gameOn: true,
-      winner: false,
-      turns: 0,
-    })
+    setTimeout(() => {
+      let arrOfRandClicks = [-4, -1, 1, 4]
+      for (let i = 0; i < 701; i++) {
+        const blankTileFinder = (el) => el.isBlankTile === true;
+        let blankPosIndex = newArray.findIndex(blankTileFinder);
+        let randClick = blankPosIndex + arrOfRandClicks[Math.floor(Math.random() * 4)]
+        newArray[randClick] ? this.tileClick(newArray[randClick].currentPos, randClick, 'yes') : i--
+      }
+      this.setState({
+        gameOn: true,
+        winner: false,
+        turns: 0,
+      })
+    }, 500)
+    this.setState({boardArray: newArray})
   }
 
   checkWin() {
     if (this.state.gameOn && this.state.turns > 1) {
       let test = this.state.boardArray.map((el, i) => el.currentPos === i).includes(false);
       if (!test) {
+        let wholeBoard = [...this.state.boardArray];
+        wholeBoard[0].isBlankTile = false;
         this.setState({
+          boardArray: wholeBoard,
           gameOn: false,
           winner: true,
         })
@@ -115,7 +123,7 @@ export class App extends React.Component {
     return (
       <div className="App container text-center">
         <div className="row">
-          <h1>The Amazing Puzzle Slider Game</h1>
+          <h1>Puzzle Slider</h1>
           {this.state.winner ? <h1 className="text-success">WE HAVE A WINNER</h1> : null}
         </div>
         <div className="row mx-auto pt-3 row400">
@@ -125,12 +133,13 @@ export class App extends React.Component {
           <div className="col">
             <button className="btn btn-secondary btn-large text-center mt-3" onClick={() => this.randShuffle()}>{this.state.gameOn ? 'Shuffle' : 'New Game'}</button>
             {!this.state.gameOn ?
-            <select className="form-select mt-3" aria-label="Default select example" onChange={e => this.handleSelect(e)}>
-              <option selected defaultValue="0">Select Puzzle Image</option>
-              <option value="Reece">Reece</option>
-              <option value="Funk">Funk Raptor</option>
-            </select>
-            : null}
+              <select className="form-select mt-3 selectImage mx-auto" aria-label="Default select example" onChange={e => this.handleSelect(e)}>
+                <option defaultValue="0">Select Puzzle Image</option>
+                <option value="Reece">Reece</option>
+                <option value="Code">C.O.D.E.</option>
+                <option value="Funk">Funk Raptor</option>
+              </select>
+              : null}
           </div>
         </div>
       </div>
